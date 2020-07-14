@@ -1,13 +1,25 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import './App.sass';
 import './App.css';
 
 import Table from './Table.js';
 
-import airlineData from './data.js';
+import { routes, getAirlineById, getAirportByCode } from './data.js';
 
 export default class App extends React.Component {
+
+  humanReadableRoutes = () => {
+    return routes.map((route) => {
+      return {
+        id: uuidv4(),
+        airline: getAirlineById(route.airline),
+        src: getAirportByCode(route.src),
+        dest: getAirportByCode(route.dest),
+      };
+    });
+  };
 
   render() {
     return (
@@ -24,7 +36,7 @@ export default class App extends React.Component {
         <section className="section">
           <div className="container">
             <Table
-              routes={airlineData.routes}
+              routes={this.humanReadableRoutes()}
             />
           </div>
         </section>

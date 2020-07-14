@@ -14,7 +14,7 @@ function Table(props) {
       <tbody>
         {props.routes.map((route) => {
           return (
-            <tr key={route}>
+            <tr key={route.id}>
               <td>{route.airline}</td>
               <td>{route.src}</td>
               <td>{route.dest}</td>
