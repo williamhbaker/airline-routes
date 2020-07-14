@@ -5,6 +5,7 @@ import './App.sass';
 import './App.css';
 
 import Table from './Table.js';
+import Header from './Header.js';
 
 import { routes, getAirlineById, getAirportByCode } from './data.js';
 
@@ -35,15 +36,9 @@ export default class App extends React.Component {
   render() {
     return (
       <>
-        <section className="hero is-primary">
-          <div className="hero-body">
-            <div className="container has-text-centered">
-              <h1 className="title">
-                Airline Routes
-              </h1>
-            </div>
-          </div>
-        </section>
+        <Header
+          heading="Airline Routes"
+        />
         <section className="section">
           <div className="container">
             <Table
