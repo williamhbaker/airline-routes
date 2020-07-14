@@ -40,13 +40,12 @@ export default class App extends React.Component {
           heading="Airline Routes"
         />
         <section className="section">
-          <div className="container">
-            <Table
-              format={this.formatValue}
-              columns={columns}
-              rows={this.state.allRoutes}
-            />
-          </div>
+          <Table
+            format={this.formatValue}
+            columns={columns}
+            rows={this.state.allRoutes}
+            maxRows={25}
+          />
         </section>
       </>
     );
