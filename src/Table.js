@@ -6,28 +6,32 @@ function Table(props) {
     <table className="table is-striped is-fullwidth" style={{margin: '0 auto'}}>
       <thead>
         <tr>
-          <th>Airline</th>
-          <th>Source Airport</th>
-          <th>Destination Airport</th>
+          {props.columns.map((col) => (
+            <th key={col.property}>
+              {col.name}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
-        {props.routes.map((route) => {
-          return (
-            <tr key={route.id}>
-              <td>{route.airline}</td>
-              <td>{route.src}</td>
-              <td>{route.dest}</td>
-            </tr>
-          );
-        })}
+        {props.rows.map((row) => (
+          <tr key={row.id}>
+            {props.columns.map((col) => (
+              <td key={col.property}>
+                {props.format(col.property, row[col.property])}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   );
 }
 
 Table.propTypes = {
-  routes: propTypes.array.isRequired,
+  format: propTypes.func.isRequired,
+  columns: propTypes.array.isRequired,
+  rows: propTypes.array.isRequired,
 };
 
 export default Table;

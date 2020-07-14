@@ -8,17 +8,28 @@ import Table from './Table.js';
 
 import { routes, getAirlineById, getAirportByCode } from './data.js';
 
-export default class App extends React.Component {
+const columns = [
+  {name: 'Airline', property: 'airline'},
+  {name: 'Source Airport', property: 'src'},
+  {name: 'Destination Airport', property: 'dest'},
+];
 
-  humanReadableRoutes = () => {
-    return routes.map((route) => {
-      return {
-        id: uuidv4(),
-        airline: getAirlineById(route.airline),
-        src: getAirportByCode(route.src),
-        dest: getAirportByCode(route.dest),
-      };
-    });
+export default class App extends React.Component {
+  state = {
+    allRoutes: routes.map((route) => Object.assign(route, { id: uuidv4() })),
+  };
+
+  formatValue = (property, value) => {
+    switch (property) {
+      case 'airline':
+        return getAirlineById(value);
+      case 'src':
+        return getAirportByCode(value);
+      case 'dest':
+        return getAirportByCode(value);
+      default:
+        return value;
+    };
   };
 
   render() {
@@ -36,7 +47,9 @@ export default class App extends React.Component {
         <section className="section">
           <div className="container">
             <Table
-              routes={this.humanReadableRoutes()}
+              format={this.formatValue}
+              columns={columns}
+              rows={this.state.allRoutes}
             />
           </div>
         </section>
