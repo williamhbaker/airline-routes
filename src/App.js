@@ -6,8 +6,9 @@ import './App.css';
 
 import Table from './Table.js';
 import Header from './Header.js';
+import Select from './Select.js';
 
-import { routes, getAirlineById, getAirportByCode } from './data.js';
+import { routes, airlines, getAirlineById, getAirportByCode } from './data.js';
 
 const columns = [
   {name: 'Airline', property: 'airline'},
@@ -33,13 +34,30 @@ export default class App extends React.Component {
     };
   };
 
+  handleSelect = (event) => {
+    const selectedAirlineId = event.target.value;
+    console.log(selectedAirlineId);
+  };
+
   render() {
     return (
       <>
         <Header
           heading="Airline Routes"
         />
-        <section className="section">
+        <nav className="level" style={{margin: '1rem 0 auto'}}>
+          <div className="level-item has-text-centered">
+            <Select 
+              allTitle="All Airlines"
+              options={airlines}
+              valueKey="id"
+              titleKey="name"
+              value=""
+              onSelect={this.handleSelect}
+            />
+          </div>
+        </nav>
+        <section className="section" style={{paddingTop: '1rem'}}>
           <Table
             format={this.formatValue}
             columns={columns}
