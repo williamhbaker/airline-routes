@@ -6,6 +6,7 @@ import './App.css';
 
 import Header from './components/Header.js';
 import FilterableRoutesTable from './components/FilterableRoutesTable.js';
+import Map from './components/Map.js';
 
 import { routes } from './data.js';
 
@@ -82,6 +83,9 @@ export default class App extends React.Component {
       <>
         <Header
           heading="Airline Routes"
+        />
+        <Map
+          routes={this.filteredRoutes()}
         />
         <FilterableRoutesTable
           options={this.optionsWithDisabled}

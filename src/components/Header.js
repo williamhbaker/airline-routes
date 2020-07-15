@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function(props) {
+export default function Header(props) {
   return (
     <section className="hero is-primary">
       <div className="hero-body">
