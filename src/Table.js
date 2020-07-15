@@ -13,10 +13,6 @@ class Table extends React.Component {
     maxRows: propTypes.number.isRequired,
   };
 
-  // state = {
-  //   currentPage: 1,
-  // }
-
   maxPages = () => Math.ceil(this.props.rows.length / this.props.maxRows);
 
   startingRow = () => (this.props.currentPage - 1) * this.props.maxRows;
@@ -27,13 +23,6 @@ class Table extends React.Component {
   }
 
   visibleRows = () => this.props.rows.slice(this.startingRow(), this.endingRow());
-
-  // handlePageClick = (event) => {
-  //   const clickedPage = Number(event.target.dataset.page);
-  //   this.setState({
-  //     currentPage: clickedPage,
-  //   });
-  // };
 
   render() {
     return (

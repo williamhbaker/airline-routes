@@ -38,14 +38,33 @@ export default class App extends React.Component {
     };
   };
 
-  optionsWithDisabled = (options, identifier, filter1, filter2) => {
-    return options.map((option) => {
-      const disabled = filter1(
-        filter2(allRoutes, option[identifier])
-      ).length === 0;
-      return Object.assign({}, option, { disabled });
-    });
+  optionsWithDisabled = (options, identifier) => {
+    if (identifier === 'id') {
+      const airportSelection = this.state.airportFilter;
+
+      return options.map((option) => {
+        const disabled = this.filteredRoutes(option[identifier], airportSelection).length === 0;
+        return Object.assign({}, option, { disabled });
+      });
+    } else if (identifier === 'code') {
+      const airlineSelection = this.state.airlineFilter;
+
+      return options.map((option) => {
+        const disabled = this.filteredRoutes(airlineSelection, option[identifier]).length === 0;
+        return Object.assign({}, option, { disabled });
+      });
+    }
   }
+
+  filteredRoutesBy = (routes, filter, identifiersArr) => {
+    if (filter === "") {
+      return routes;
+    } else {
+      return routes.filter((route) => {
+        return identifiersArr.some((identifier) => String(route[identifier]) === String(filter));
+      });
+    }
+  };
 
   handlePageClick = (event) => {
     const clickedPage = Number(event.target.dataset.page);
@@ -79,28 +98,14 @@ export default class App extends React.Component {
     });
   };
 
-  filteredRoutes = () => {
-    return this.filterByAirport(this.filterByAirline(allRoutes));
-  };
+  filteredRoutes = (airlineFilter, airportFilter) => {
+    airlineFilter = airlineFilter || this.state.airlineFilter;
+    airportFilter = airportFilter || this.state.airportFilter;
 
-  filterByAirport = (routes, airportFilter = this.state.airportFilter) => {
-    if (airportFilter === "") {
-      return routes;
-    } else {
-      return routes.filter((route) => (
-        route.src === airportFilter || route.dest === airportFilter
-      ));
-    }
-  };
+    const byAirline = this.filteredRoutesBy(allRoutes, airlineFilter, ['airline'])
+    const byAirport = this.filteredRoutesBy(byAirline, airportFilter, ['src', 'dest']);
 
-  filterByAirline = (routes, airlineFilter = this.state.airlineFilter) => {
-    if (airlineFilter === "") {
-      return routes;
-    } else {
-      return routes.filter((route) => (
-        String(route.airline) === String(airlineFilter)
-      ));
-    }
+    return byAirport;
   };
 
   render() {
@@ -114,7 +119,7 @@ export default class App extends React.Component {
             <p style={{marginRight: '0.5rem'}}>Show routes on</p>
             <Select 
               allTitle="All Airlines"
-              options={this.optionsWithDisabled(airlines, 'id', this.filterByAirport, this.filterByAirline)}
+              options={this.optionsWithDisabled(airlines, 'id')}
               valueKey="id"
               titleKey="name"
               value={this.state.airlineFilter}
@@ -123,7 +128,7 @@ export default class App extends React.Component {
             <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
             <Select 
               allTitle="All Airports"
-              options={this.optionsWithDisabled(airports, 'code', this.filterByAirline, this.filterByAirport)}
+              options={this.optionsWithDisabled(airports, 'code')}
               valueKey="code"
               titleKey="name"
               value={this.state.airportFilter}
