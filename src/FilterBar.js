@@ -7,9 +7,9 @@ import { airlines, airports } from './data.js';
 
 function FilterBar(props) {
   return (
-    <nav className="level" style={{margin: '1rem 0 auto'}}>
-      <div className="level-item has-text-centered">
-        <p style={{marginRight: '0.5rem'}}>Show routes on</p>
+    <nav className="level">
+      <p className="level-item">Show routes on</p>
+      <div className="level-item">
         <Select 
           allTitle="All Airlines"
           options={props.options(airlines, 'id')}
@@ -18,7 +18,9 @@ function FilterBar(props) {
           value={props.airlineFilterValue}
           onSelect={(event) => props.onFilterSelect('airlineFilter', event.target.value)}
         />
-        <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
+      </div>
+      <p className="level-item">flying in or out of</p>
+      <div className="level-item">
         <Select 
           allTitle="All Airports"
           options={props.options(airports, 'code')}
@@ -27,6 +29,8 @@ function FilterBar(props) {
           value={props.airportFilterValue}
           onSelect={(event) => props.onFilterSelect('airportFilter', event.target.value)}
         />
+      </div>
+      <div className="level-item">
         <button
           className="button is-warning"
           style={{marginLeft: '0.5rem'}}

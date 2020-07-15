@@ -2,10 +2,6 @@
   width: 90%;
 }
 
-.pagination a {
-  margin: 0 .5em;
-}
-
 svg circle:hover {
   cursor: crosshair;
 }

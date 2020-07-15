@@ -12,22 +12,18 @@ function PaginatedTable(props) {
   const visibleRows = props.rows.slice(startingRow, endingRow);
 
   return (
-    <section className="section" style={{paddingTop: '1rem'}}>
-      <div className="container">
-        <Table
-          format={props.format}
-          columns={props.columns}
-          rows={visibleRows}
-        />
-        <Paginator
-          maxPages={maxPages}
-          currentPage={props.currentPage}
-          onPageClick={props.onPageClick}
-        />
-
-        <p className='has-text-centered'>{`Showing ${startingRow + 1}-${endingRow} of ${props.rows.length} records.`}</p>
-      </div>
-    </section>
+    <div className="container">
+      <Table
+        format={props.format}
+        columns={props.columns}
+        rows={visibleRows}
+      />
+      <Paginator
+        maxPages={maxPages}
+        currentPage={props.currentPage}
+        onPageClick={props.onPageClick}
+      />
+    </div>
   );
 }
 

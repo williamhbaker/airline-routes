@@ -27,7 +27,7 @@ const formatValue = (property, value) => {
 
 function FilterableRoutesTable(props) {
   return (
-    <>
+    <section className="section">
       <FilterBar
         options={props.options}
         airlineFilterValue={props.airlineFilterValue}
@@ -43,7 +43,7 @@ function FilterableRoutesTable(props) {
         onPageClick={props.onPageClick}
         maxRows={25}
       />
-    </>
+    </section>
   );
 }
 
