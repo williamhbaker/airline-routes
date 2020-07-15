@@ -6,8 +6,9 @@ function Select(props) {
     <div className="select is-rounded">
       <select
         onChange={props.onSelect}
+        value={props.value}
       >
-        <option>{props.allTitle}</option>
+        <option value="">{props.allTitle}</option>
         {props.options.map((option) => (
           <option 
             key={option[props.valueKey]}

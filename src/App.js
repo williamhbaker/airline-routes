@@ -16,9 +16,11 @@ const columns = [
   {name: 'Destination Airport', property: 'dest'},
 ];
 
+const allRoutes = routes.map((route) => Object.assign(route, { id: uuidv4() }));
+
 export default class App extends React.Component {
   state = {
-    allRoutes: routes.map((route) => Object.assign(route, { id: uuidv4() })),
+    airlineFilter: "",
   };
 
   formatValue = (property, value) => {
@@ -35,8 +37,20 @@ export default class App extends React.Component {
   };
 
   handleSelect = (event) => {
-    const selectedAirlineId = event.target.value;
-    console.log(selectedAirlineId);
+    const airlineFilter = event.target.value;
+    this.setState({
+      airlineFilter
+    });
+  };
+
+  filteredRoutes = () => {
+    if (this.state.airlineFilter === "") {
+      return allRoutes;
+    } else {
+      return allRoutes.filter((route) => (
+        String(route.airline) === this.state.airlineFilter
+      ));
+    }
   };
 
   render() {
@@ -52,7 +66,7 @@ export default class App extends React.Component {
               options={airlines}
               valueKey="id"
               titleKey="name"
-              value=""
+              value={this.state.airlineFilter}
               onSelect={this.handleSelect}
             />
           </div>
@@ -61,7 +75,7 @@ export default class App extends React.Component {
           <Table
             format={this.formatValue}
             columns={columns}
-            rows={this.state.allRoutes}
+            rows={this.filteredRoutes()}
             maxRows={25}
           />
         </section>
