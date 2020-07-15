@@ -8,7 +8,7 @@ import Table from './Table.js';
 import Header from './Header.js';
 import Select from './Select.js';
 
-import { routes, airlines, getAirlineById, getAirportByCode } from './data.js';
+import { routes, airlines, airports, getAirlineById, getAirportByCode } from './data.js';
 
 const columns = [
   {name: 'Airline', property: 'airline'},
@@ -21,6 +21,7 @@ const allRoutes = routes.map((route) => Object.assign(route, { id: uuidv4() }));
 export default class App extends React.Component {
   state = {
     airlineFilter: "",
+    airportFilter: "",
   };
 
   formatValue = (property, value) => {
@@ -36,18 +37,40 @@ export default class App extends React.Component {
     };
   };
 
-  handleSelect = (event) => {
+  handleAirlineFilterSelect = (event) => {
     const airlineFilter = event.target.value;
     this.setState({
-      airlineFilter
+      airlineFilter,
+    });
+  };
+
+  handleAirportFilterSelect = (event) => {
+    const airportFilter = event.target.value;
+    this.setState({
+      airportFilter,
     });
   };
 
   filteredRoutes = () => {
-    if (this.state.airlineFilter === "") {
-      return allRoutes;
+    return this.filterByAirport(this.filterByAirline(allRoutes));
+  };
+
+  filterByAirport = (routes) => {
+    if (this.state.airportFilter === "") {
+      return routes;
     } else {
-      return allRoutes.filter((route) => (
+      return routes.filter((route) => (
+        route.src === this.state.airportFilter ||
+        route.dest === this.state.airportFilter
+      ));
+    }
+  };
+
+  filterByAirline = (routes) => {
+    if (this.state.airlineFilter === "") {
+      return routes;
+    } else {
+      return routes.filter((route) => (
         String(route.airline) === this.state.airlineFilter
       ));
     }
@@ -61,13 +84,23 @@ export default class App extends React.Component {
         />
         <nav className="level" style={{margin: '1rem 0 auto'}}>
           <div className="level-item has-text-centered">
+            <p style={{marginRight: '0.5rem'}}>Show routes on</p>
             <Select 
               allTitle="All Airlines"
               options={airlines}
               valueKey="id"
               titleKey="name"
               value={this.state.airlineFilter}
-              onSelect={this.handleSelect}
+              onSelect={this.handleAirlineFilterSelect}
+            />
+            <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
+            <Select 
+              allTitle="All Airports"
+              options={airports}
+              valueKey="code"
+              titleKey="name"
+              value={this.state.airportFilter}
+              onSelect={this.handleAirportFilterSelect}
             />
           </div>
         </nav>
