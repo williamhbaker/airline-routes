@@ -5,7 +5,11 @@ function getAirlineById(id) {
 }
 
 function getAirportByCode(code) {
-  return airports.filter((airport) => airport.code === code)[0].name;
+  return getAirportInfoByCode(code).name;
+}
+
+function getAirportInfoByCode(code) {
+  return airports.filter((airport) => airport.code === code)[0];
 }
 
 const routes = [
@@ -1411,4 +1415,5 @@ module.exports = {
   airports,
   getAirlineById,
   getAirportByCode,
+  getAirportInfoByCode,
 };
