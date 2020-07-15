@@ -1,9 +1,11 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
+import Table from './Table.js';
 import Paginator from './Paginator.js';
 
-class Table extends React.Component {
+
+class PaginatedTable extends React.Component {
   static propTypes = {
     format: propTypes.func.isRequired,
     columns: propTypes.array.isRequired,
@@ -28,28 +30,11 @@ class Table extends React.Component {
     return (
       <section className="section" style={{paddingTop: '1rem'}}>
         <div className="container">
-          <table className="table is-striped is-fullwidth" style={{margin: '0 auto'}}>
-            <thead>
-              <tr>
-                {this.props.columns.map((col) => (
-                  <th key={col.property}>
-                    {col.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {this.visibleRows().map((row) => (
-                <tr key={row.id}>
-                  {this.props.columns.map((col) => (
-                    <td key={col.property}>
-                      {this.props.format(col.property, row[col.property])}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            format={this.props.format}
+            columns={this.props.columns}
+            rows={this.visibleRows()}
+          />
           <Paginator
             maxPages={this.maxPages()}
             currentPage={this.props.currentPage}
@@ -62,4 +47,4 @@ class Table extends React.Component {
   }
 }
 
-export default Table;
+export default PaginatedTable;
