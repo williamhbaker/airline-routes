@@ -39,22 +39,30 @@ export default class App extends React.Component {
   };
 
   optionsWithDisabled = (options, identifier) => {
+    let filterObjectKey;
+
     if (identifier === 'id') {
-      const airportSelection = this.state.airportFilter;
-
-      return options.map((option) => {
-        const disabled = this.filteredRoutes(option[identifier], airportSelection).length === 0;
-        return Object.assign({}, option, { disabled });
-      });
+      filterObjectKey = 'airlineFilter';
     } else if (identifier === 'code') {
-      const airlineSelection = this.state.airlineFilter;
-
-      return options.map((option) => {
-        const disabled = this.filteredRoutes(airlineSelection, option[identifier]).length === 0;
-        return Object.assign({}, option, { disabled });
-      });
+      filterObjectKey = 'airportFilter';
     }
+
+    return options.map((option) => {
+      const filterObj = {};
+      filterObj[filterObjectKey] = option[identifier]
+      const disabled = this.filteredRoutes(filterObj).length === 0;
+      return Object.assign({}, option, { disabled });
+    });
   }
+
+  filteredRoutes = (filterObj = {}) => {
+    const airlineFilter = filterObj.airlineFilter || this.state.airlineFilter;
+    const airportFilter = filterObj.airportFilter || this.state.airportFilter;
+
+    const byAirline = this.filteredRoutesBy(allRoutes, airlineFilter, ['airline'])
+    return this.filteredRoutesBy(byAirline, airportFilter, ['src', 'dest']);
+  };
+
 
   filteredRoutesBy = (routes, filter, identifiersArr) => {
     if (filter === "") {
@@ -96,16 +104,6 @@ export default class App extends React.Component {
       airportFilter,
       currentPage: 1,
     });
-  };
-
-  filteredRoutes = (airlineFilter, airportFilter) => {
-    airlineFilter = airlineFilter || this.state.airlineFilter;
-    airportFilter = airportFilter || this.state.airportFilter;
-
-    const byAirline = this.filteredRoutesBy(allRoutes, airlineFilter, ['airline'])
-    const byAirport = this.filteredRoutesBy(byAirline, airportFilter, ['src', 'dest']);
-
-    return byAirport;
   };
 
   render() {
