@@ -13,6 +13,7 @@ function Select(props) {
           <option 
             key={option[props.valueKey]}
             value={option[props.valueKey]}
+            disabled={option.disabled}
           >
             {option[props.titleKey]}
           </option>

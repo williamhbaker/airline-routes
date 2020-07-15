@@ -38,6 +38,24 @@ export default class App extends React.Component {
     };
   };
 
+  airportsWithDisabledFlag = () => {
+    return airports.map((airport) => {
+      const disabled = this.filterByAirline(
+        this.filterByAirport(allRoutes, airport.code)
+      ).length === 0;
+      return Object.assign({}, airport, { disabled });
+    });
+  };
+
+  airlinesWithDisabledFlag = () => {
+    return airlines.map((airline) => {  
+      const disabled = this.filterByAirport(
+        this.filterByAirline(allRoutes, String(airline.id))
+      ).length === 0;
+      return Object.assign({}, airline, { disabled });
+    });
+  };
+
   handlePageClick = (event) => {
     const clickedPage = Number(event.target.dataset.page);
     this.setState({
@@ -74,23 +92,22 @@ export default class App extends React.Component {
     return this.filterByAirport(this.filterByAirline(allRoutes));
   };
 
-  filterByAirport = (routes) => {
-    if (this.state.airportFilter === "") {
+  filterByAirport = (routes, airportFilter = this.state.airportFilter) => {
+    if (airportFilter === "") {
       return routes;
     } else {
       return routes.filter((route) => (
-        route.src === this.state.airportFilter ||
-        route.dest === this.state.airportFilter
+        route.src === airportFilter || route.dest === airportFilter
       ));
     }
   };
 
-  filterByAirline = (routes) => {
-    if (this.state.airlineFilter === "") {
+  filterByAirline = (routes, airlineFilter = this.state.airlineFilter) => {
+    if (airlineFilter === "") {
       return routes;
     } else {
       return routes.filter((route) => (
-        String(route.airline) === this.state.airlineFilter
+        String(route.airline) === airlineFilter
       ));
     }
   };
@@ -106,7 +123,7 @@ export default class App extends React.Component {
             <p style={{marginRight: '0.5rem'}}>Show routes on</p>
             <Select 
               allTitle="All Airlines"
-              options={airlines}
+              options={this.airlinesWithDisabledFlag()}
               valueKey="id"
               titleKey="name"
               value={this.state.airlineFilter}
@@ -115,7 +132,7 @@ export default class App extends React.Component {
             <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
             <Select 
               allTitle="All Airports"
-              options={airports}
+              options={this.airportsWithDisabledFlag()}
               valueKey="code"
               titleKey="name"
               value={this.state.airportFilter}
