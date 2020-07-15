@@ -1,10 +1,10 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
-import Select from './Select.js';
 import Table from './Table.js';
+import FilterBar from './FilterBar.js';
 
-import { airlines, airports, getAirlineById, getAirportByCode } from './data.js';
+import { getAirlineById, getAirportByCode } from './data.js';
 
 const columns = [
   {name: 'Airline', property: 'airline'},
@@ -28,35 +28,13 @@ const formatValue = (property, value) => {
 function FilterableRoutesTable(props) {
   return (
     <>
-      <nav className="level" style={{margin: '1rem 0 auto'}}>
-        <div className="level-item has-text-centered">
-          <p style={{marginRight: '0.5rem'}}>Show routes on</p>
-          <Select 
-            allTitle="All Airlines"
-            options={props.options(airlines, 'id')}
-            valueKey="id"
-            titleKey="name"
-            value={props.airlineFilterValue}
-            onSelect={(event) => props.onFilterSelect('airlineFilter', event.target.value)}
-          />
-          <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
-          <Select 
-            allTitle="All Airports"
-            options={props.options(airports, 'code')}
-            valueKey="code"
-            titleKey="name"
-            value={props.airportFilterValue}
-            onSelect={(event) => props.onFilterSelect('airportFilter', event.target.value)}
-          />
-          <button
-            className="button is-warning"
-            style={{marginLeft: '0.5rem'}}
-            onClick={props.onClearFilterClick}
-          >
-            Clear Filters
-          </button>
-        </div>
-      </nav>
+      <FilterBar
+        options={props.options}
+        airlineFilterValue={props.airlineFilterValue}
+        airportFilterValue={props.airportFilterValue}
+        onFilterSelect={props.onFilterSelect}
+        onClearFilterClick={props.onClearFilterClick}
+      />
       <section className="section" style={{paddingTop: '1rem'}}>
         <Table
           format={formatValue}
