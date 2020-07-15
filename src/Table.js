@@ -19,7 +19,10 @@ class Table extends React.Component {
 
   startingRow = () => (this.state.currentPage - 1) * this.props.maxRows;
 
-  endingRow = () => this.state.currentPage * this.props.maxRows
+  endingRow = () => {
+    const boundedLimit = this.state.currentPage * this.props.maxRows;
+    return boundedLimit < this.props.rows.length ? boundedLimit : this.props.rows.length;
+  }
 
   visibleRows = () => this.props.rows.slice(this.startingRow(), this.endingRow());
 
