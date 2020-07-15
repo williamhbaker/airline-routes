@@ -8,30 +8,32 @@ class Table extends React.Component {
     format: propTypes.func.isRequired,
     columns: propTypes.array.isRequired,
     rows: propTypes.array.isRequired,
-    maxRows: propTypes.number,
+    currentPage: propTypes.number.isRequired,
+    onPageClick: propTypes.func.isRequired,
+    maxRows: propTypes.number.isRequired,
   };
 
-  state = {
-    currentPage: 1,
-  }
+  // state = {
+  //   currentPage: 1,
+  // }
 
   maxPages = () => Math.ceil(this.props.rows.length / this.props.maxRows);
 
-  startingRow = () => (this.state.currentPage - 1) * this.props.maxRows;
+  startingRow = () => (this.props.currentPage - 1) * this.props.maxRows;
 
   endingRow = () => {
-    const boundedLimit = this.state.currentPage * this.props.maxRows;
+    const boundedLimit = this.props.currentPage * this.props.maxRows;
     return boundedLimit < this.props.rows.length ? boundedLimit : this.props.rows.length;
   }
 
   visibleRows = () => this.props.rows.slice(this.startingRow(), this.endingRow());
 
-  handlePageClick = (event) => {
-    const clickedPage = Number(event.target.dataset.page);
-    this.setState({
-      currentPage: clickedPage,
-    });
-  };
+  // handlePageClick = (event) => {
+  //   const clickedPage = Number(event.target.dataset.page);
+  //   this.setState({
+  //     currentPage: clickedPage,
+  //   });
+  // };
 
   render() {
     return (
@@ -60,8 +62,8 @@ class Table extends React.Component {
         </table>
         <Paginator
           maxPages={this.maxPages()}
-          currentPage={this.state.currentPage}
-          onPageClick={this.handlePageClick}
+          currentPage={this.props.currentPage}
+          onPageClick={this.props.onPageClick}
         />
         <p className='has-text-centered'>{`Showing ${this.startingRow() + 1}-${this.endingRow()} of ${this.props.rows.length} records.`}</p>
       </div>

@@ -22,6 +22,7 @@ export default class App extends React.Component {
   state = {
     airlineFilter: "",
     airportFilter: "",
+    currentPage: 1,
   };
 
   formatValue = (property, value) => {
@@ -37,10 +38,18 @@ export default class App extends React.Component {
     };
   };
 
+  handlePageClick = (event) => {
+    const clickedPage = Number(event.target.dataset.page);
+    this.setState({
+      currentPage: clickedPage,
+    });
+  };
+
   handleAirlineFilterSelect = (event) => {
     const airlineFilter = event.target.value;
     this.setState({
       airlineFilter,
+      currentPage: 1,
     });
   };
 
@@ -48,6 +57,7 @@ export default class App extends React.Component {
     const airportFilter = event.target.value;
     this.setState({
       airportFilter,
+      currentPage: 1,
     });
   };
 
@@ -109,6 +119,8 @@ export default class App extends React.Component {
             format={this.formatValue}
             columns={columns}
             rows={this.filteredRoutes()}
+            currentPage={this.state.currentPage}
+            onPageClick={this.handlePageClick}
             maxRows={25}
           />
         </section>
