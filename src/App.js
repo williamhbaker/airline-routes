@@ -38,23 +38,14 @@ export default class App extends React.Component {
     };
   };
 
-  airportsWithDisabledFlag = () => {
-    return airports.map((airport) => {
-      const disabled = this.filterByAirline(
-        this.filterByAirport(allRoutes, airport.code)
+  optionsWithDisabled = (options, identifier, filter1, filter2) => {
+    return options.map((option) => {
+      const disabled = filter1(
+        filter2(allRoutes, option[identifier])
       ).length === 0;
-      return Object.assign({}, airport, { disabled });
+      return Object.assign({}, option, { disabled });
     });
-  };
-
-  airlinesWithDisabledFlag = () => {
-    return airlines.map((airline) => {  
-      const disabled = this.filterByAirport(
-        this.filterByAirline(allRoutes, String(airline.id))
-      ).length === 0;
-      return Object.assign({}, airline, { disabled });
-    });
-  };
+  }
 
   handlePageClick = (event) => {
     const clickedPage = Number(event.target.dataset.page);
@@ -107,7 +98,7 @@ export default class App extends React.Component {
       return routes;
     } else {
       return routes.filter((route) => (
-        String(route.airline) === airlineFilter
+        String(route.airline) === String(airlineFilter)
       ));
     }
   };
@@ -123,7 +114,7 @@ export default class App extends React.Component {
             <p style={{marginRight: '0.5rem'}}>Show routes on</p>
             <Select 
               allTitle="All Airlines"
-              options={this.airlinesWithDisabledFlag()}
+              options={this.optionsWithDisabled(airlines, 'id', this.filterByAirport, this.filterByAirline)}
               valueKey="id"
               titleKey="name"
               value={this.state.airlineFilter}
@@ -132,7 +123,7 @@ export default class App extends React.Component {
             <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
             <Select 
               allTitle="All Airports"
-              options={this.airportsWithDisabledFlag()}
+              options={this.optionsWithDisabled(airports, 'code', this.filterByAirline, this.filterByAirport)}
               valueKey="code"
               titleKey="name"
               value={this.state.airportFilter}
