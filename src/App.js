@@ -4,17 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 import './App.sass';
 import './App.css';
 
-import Table from './Table.js';
 import Header from './Header.js';
-import Select from './Select.js';
+import FilterableRoutesTable from './FilterableRoutesTable.js';
 
-import { routes, airlines, airports, getAirlineById, getAirportByCode } from './data.js';
-
-const columns = [
-  {name: 'Airline', property: 'airline'},
-  {name: 'Source Airport', property: 'src'},
-  {name: 'Destination Airport', property: 'dest'},
-];
+import { routes } from './data.js';
 
 const allRoutes = routes.map((route) => Object.assign(route, { id: uuidv4() }));
 
@@ -25,35 +18,40 @@ export default class App extends React.Component {
     currentPage: 1,
   };
 
-  formatValue = (property, value) => {
-    switch (property) {
-      case 'airline':
-        return getAirlineById(value);
-      case 'src':
-        return getAirportByCode(value);
-      case 'dest':
-        return getAirportByCode(value);
-      default:
-        return value;
-    };
+  optionsWithDisabled = (options, identifier) => {
+    let filterObjectKey;
+
+    if (identifier === 'id') {
+      filterObjectKey = 'airlineFilter';
+    } else if (identifier === 'code') {
+      filterObjectKey = 'airportFilter';
+    }
+
+    return options.map((option) => {
+      const filterObj = {};
+      filterObj[filterObjectKey] = option[identifier]
+      const disabled = this.filteredRoutes(filterObj).length === 0;
+      return Object.assign({}, option, { disabled });
+    });
+  }
+
+  filteredRoutes = (filterObj = {}) => {
+    const airlineFilter = filterObj.airlineFilter || this.state.airlineFilter;
+    const airportFilter = filterObj.airportFilter || this.state.airportFilter;
+
+    const byAirline = this.filteredRoutesBy(allRoutes, airlineFilter, ['airline'])
+    return this.filteredRoutesBy(byAirline, airportFilter, ['src', 'dest']);
   };
 
-  airportsWithDisabledFlag = () => {
-    return airports.map((airport) => {
-      const disabled = this.filterByAirline(
-        this.filterByAirport(allRoutes, airport.code)
-      ).length === 0;
-      return Object.assign({}, airport, { disabled });
-    });
-  };
 
-  airlinesWithDisabledFlag = () => {
-    return airlines.map((airline) => {  
-      const disabled = this.filterByAirport(
-        this.filterByAirline(allRoutes, String(airline.id))
-      ).length === 0;
-      return Object.assign({}, airline, { disabled });
-    });
+  filteredRoutesBy = (routes, filter, identifiersArr) => {
+    if (filter === "") {
+      return routes;
+    } else {
+      return routes.filter((route) => {
+        return identifiersArr.some((identifier) => String(route[identifier]) === String(filter));
+      });
+    }
   };
 
   handlePageClick = (event) => {
@@ -72,45 +70,12 @@ export default class App extends React.Component {
     });
   };
 
-  handleAirlineFilterSelect = (event) => {
-    const airlineFilter = event.target.value;
-    this.setState({
-      airlineFilter,
-      currentPage: 1,
-    });
-  };
+  handleFilterSelect = (filterName, newValue) => {
+    const newState = { currentPage: 1 };
+    newState[filterName] = newValue;
 
-  handleAirportFilterSelect = (event) => {
-    const airportFilter = event.target.value;
-    this.setState({
-      airportFilter,
-      currentPage: 1,
-    });
-  };
-
-  filteredRoutes = () => {
-    return this.filterByAirport(this.filterByAirline(allRoutes));
-  };
-
-  filterByAirport = (routes, airportFilter = this.state.airportFilter) => {
-    if (airportFilter === "") {
-      return routes;
-    } else {
-      return routes.filter((route) => (
-        route.src === airportFilter || route.dest === airportFilter
-      ));
-    }
-  };
-
-  filterByAirline = (routes, airlineFilter = this.state.airlineFilter) => {
-    if (airlineFilter === "") {
-      return routes;
-    } else {
-      return routes.filter((route) => (
-        String(route.airline) === airlineFilter
-      ));
-    }
-  };
+    this.setState(newState);
+  }
 
   render() {
     return (
@@ -118,45 +83,16 @@ export default class App extends React.Component {
         <Header
           heading="Airline Routes"
         />
-        <nav className="level" style={{margin: '1rem 0 auto'}}>
-          <div className="level-item has-text-centered">
-            <p style={{marginRight: '0.5rem'}}>Show routes on</p>
-            <Select 
-              allTitle="All Airlines"
-              options={this.airlinesWithDisabledFlag()}
-              valueKey="id"
-              titleKey="name"
-              value={this.state.airlineFilter}
-              onSelect={this.handleAirlineFilterSelect}
-            />
-            <p style={{margin: 'auto 0.5rem'}}>flying in or out of</p>
-            <Select 
-              allTitle="All Airports"
-              options={this.airportsWithDisabledFlag()}
-              valueKey="code"
-              titleKey="name"
-              value={this.state.airportFilter}
-              onSelect={this.handleAirportFilterSelect}
-            />
-            <button
-              className="button is-warning"
-              style={{marginLeft: '0.5rem'}}
-              onClick={this.handleClearFilterClick}
-            >
-              Clear Filters
-            </button>
-          </div>
-        </nav>
-        <section className="section" style={{paddingTop: '1rem'}}>
-          <Table
-            format={this.formatValue}
-            columns={columns}
-            rows={this.filteredRoutes()}
-            currentPage={this.state.currentPage}
-            onPageClick={this.handlePageClick}
-            maxRows={25}
-          />
-        </section>
+        <FilterableRoutesTable
+          options={this.optionsWithDisabled}
+          airlineFilterValue={this.state.airlineFilter}
+          onFilterSelect={this.handleFilterSelect}
+          airportFilterValue={this.state.airportFilter}
+          onClearFilterClick={this.handleClearFilterClick}
+          rows={this.filteredRoutes()}
+          currentPage={this.state.currentPage}
+          onPageClick={this.handlePageClick}
+        />
       </>
     );
   }
