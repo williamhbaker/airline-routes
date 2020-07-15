@@ -26,36 +26,38 @@ class Table extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <table className="table is-striped is-fullwidth" style={{margin: '0 auto'}}>
-          <thead>
-            <tr>
-              {this.props.columns.map((col) => (
-                <th key={col.property}>
-                  {col.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {this.visibleRows().map((row) => (
-              <tr key={row.id}>
+      <section className="section" style={{paddingTop: '1rem'}}>
+        <div className="container">
+          <table className="table is-striped is-fullwidth" style={{margin: '0 auto'}}>
+            <thead>
+              <tr>
                 {this.props.columns.map((col) => (
-                  <td key={col.property}>
-                    {this.props.format(col.property, row[col.property])}
-                  </td>
+                  <th key={col.property}>
+                    {col.name}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <Paginator
-          maxPages={this.maxPages()}
-          currentPage={this.props.currentPage}
-          onPageClick={this.props.onPageClick}
-        />
-        <p className='has-text-centered'>{`Showing ${this.startingRow() + 1}-${this.endingRow()} of ${this.props.rows.length} records.`}</p>
-      </div>
+            </thead>
+            <tbody>
+              {this.visibleRows().map((row) => (
+                <tr key={row.id}>
+                  {this.props.columns.map((col) => (
+                    <td key={col.property}>
+                      {this.props.format(col.property, row[col.property])}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Paginator
+            maxPages={this.maxPages()}
+            currentPage={this.props.currentPage}
+            onPageClick={this.props.onPageClick}
+          />
+          <p className='has-text-centered'>{`Showing ${this.startingRow() + 1}-${this.endingRow()} of ${this.props.rows.length} records.`}</p>
+        </div>
+      </section>
     );
   }
 }

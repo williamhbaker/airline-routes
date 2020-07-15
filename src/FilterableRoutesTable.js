@@ -35,16 +35,14 @@ function FilterableRoutesTable(props) {
         onFilterSelect={props.onFilterSelect}
         onClearFilterClick={props.onClearFilterClick}
       />
-      <section className="section" style={{paddingTop: '1rem'}}>
-        <Table
-          format={formatValue}
-          columns={columns}
-          rows={props.rows}
-          currentPage={props.currentPage}
-          onPageClick={props.onPageClick}
-          maxRows={25}
-        />
-      </section>
+      <Table
+        format={formatValue}
+        columns={columns}
+        rows={props.rows}
+        currentPage={props.currentPage}
+        onPageClick={props.onPageClick}
+        maxRows={25}
+      />
     </>
   );
 }
