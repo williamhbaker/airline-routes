@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 import PaginatedTable from './PaginatedTable.js';
 import FilterBar from './FilterBar.js';
 
-import { getAirlineById, getAirportByCode } from './data.js';
+import { getAirlineById, getAirportByCode, airlines, airports } from '../data.js';
 
 const columns = [
   {name: 'Airline', property: 'airline'},
@@ -34,6 +34,8 @@ function FilterableRoutesTable(props) {
         airportFilterValue={props.airportFilterValue}
         onFilterSelect={props.onFilterSelect}
         onClearFilterClick={props.onClearFilterClick}
+        airlines={airlines}
+        airports={airports}
       />
       <PaginatedTable
         format={formatValue}

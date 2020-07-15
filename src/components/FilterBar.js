@@ -3,8 +3,6 @@ import propTypes from 'prop-types';
 
 import Select from './Select.js';
 
-import { airlines, airports } from './data.js';
-
 function FilterBar(props) {
   return (
     <nav className="level">
@@ -12,7 +10,7 @@ function FilterBar(props) {
       <div className="level-item">
         <Select 
           allTitle="All Airlines"
-          options={props.options(airlines, 'id')}
+          options={props.options(props.airlines, 'id')}
           valueKey="id"
           titleKey="name"
           value={props.airlineFilterValue}
@@ -23,7 +21,7 @@ function FilterBar(props) {
       <div className="level-item">
         <Select 
           allTitle="All Airports"
-          options={props.options(airports, 'code')}
+          options={props.options(props.airports, 'code')}
           valueKey="code"
           titleKey="name"
           value={props.airportFilterValue}
@@ -49,6 +47,8 @@ FilterBar.propTypes = {
   airportFilterValue: propTypes.string.isRequired,
   onFilterSelect: propTypes.func.isRequired,
   onClearFilterClick: propTypes.func.isRequired,
+  airlines: propTypes.array.isRequired,
+  airports: propTypes.array.isRequired,
 };
 
 export default FilterBar;
