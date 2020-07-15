@@ -1,7 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
-import Table from './Table.js';
+import PaginatedTable from './PaginatedTable.js';
 import FilterBar from './FilterBar.js';
 
 import { getAirlineById, getAirportByCode } from './data.js';
@@ -35,7 +35,7 @@ function FilterableRoutesTable(props) {
         onFilterSelect={props.onFilterSelect}
         onClearFilterClick={props.onClearFilterClick}
       />
-      <Table
+      <PaginatedTable
         format={formatValue}
         columns={columns}
         rows={props.rows}
