@@ -23,6 +23,7 @@ function PaginatedTable(props) {
         currentPage={props.currentPage}
         onPageClick={props.onPageClick}
       />
+      <p className='has-text-centered'>{`Showing ${startingRow + 1}-${endingRow} of ${props.rows.length} records.`}</p>
     </div>
   );
 }
