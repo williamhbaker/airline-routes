@@ -45,6 +45,15 @@ export default class App extends React.Component {
     });
   };
 
+  handleClearFilterClick = (event) => {
+    event.preventDefault();
+    this.setState({
+      airlineFilter: "",
+      airportFilter: "",
+      currentPage: 1,
+    });
+  };
+
   handleAirlineFilterSelect = (event) => {
     const airlineFilter = event.target.value;
     this.setState({
@@ -112,6 +121,13 @@ export default class App extends React.Component {
               value={this.state.airportFilter}
               onSelect={this.handleAirportFilterSelect}
             />
+            <button
+              className="button is-warning"
+              style={{marginLeft: '0.5rem'}}
+              onClick={this.handleClearFilterClick}
+            >
+              Clear Filters
+            </button>
           </div>
         </nav>
         <section className="section" style={{paddingTop: '1rem'}}>
