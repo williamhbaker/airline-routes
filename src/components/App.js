@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import './App.sass';
 import './App.css';
 
-import Header from './components/Header.js';
-import FilterableRoutesTable from './components/FilterableRoutesTable.js';
-import Map from './components/Map.js';
+import Header from './Header.js';
+import FilterableRoutesTable from './FilterableRoutesTable.js';
+import Map from './Map.js';
 
-import { routes } from './data.js';
+import { routes } from '../data.js';
 
 const allRoutes = routes.map((route) => Object.assign(route, { id: uuidv4() }));
 
